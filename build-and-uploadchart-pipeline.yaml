@@ -34,7 +34,7 @@ spec:
     params:
       - name: pathToContext
         value: "${params.pathToContext}"
-      - name: pathToContext
+      - name: pathToDockerFile
         value: "${params.pathToDockerFile}"
       - name: imageUrl
         value: "${params.imageUrl}"
