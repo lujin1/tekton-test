@@ -1,0 +1,32 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: chart-to-chartmuseum
+spec:
+  inputs:
+    resources:
+      - name: git-source
+        type: git
+    params:
+      - name: pathToChart
+        description: The path to uploadchart for your helm chart
+      - name: harborUrl
+        description: Url of harbor
+      - name: harborProject
+        description: chart 上传到harbor的项目名称
+        default: "library"
+      - name: harborUsername
+        description: username of haror
+        default: "test"
+      - name: harborPassword
+        description: Password of haror
+        default: "test"
+  steps:
+    - name: upload-to-chart
+      image: harbor.wise-paas.io/tekton/uploadchart:0.0.2
+      args:
+        - "--file=/workspace/git-source/${inputs.params.pathToChart}"
+        - "--username=${inputs.params.harborUsername}"
+        - "--password=${inputs.params.harborPassword}"
+        - "--harborurl=${inputs.params.harborUrl}"
+        - "--harborproject=${inputs.params.harborProject}"
