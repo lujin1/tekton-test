@@ -1,0 +1,65 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata:
+  name: build-and-uploadchart-pipeline
+spec:
+  resources:
+    - name: git-source
+      type: git
+  params:
+    - name: pathToContext
+      description: The path to the build context
+    - name: pathToDockerFile
+      description: The path to the dockerfile to build (relative to the context)
+      default: Dockerfile
+    - name: imageUrl
+      description: Url of image repository
+    - name: imageTag
+      description: Tag to apply to the built image
+      default: "latest"
+    - name: pathToChart
+      description: The path to uploadchart for your helm chart
+    - name: harborUrl
+      description: Url of harbor
+    - name: harborProject
+      description: chart 上传到harbor的项目名称
+    - name: harborUsername
+      description: username of haror
+    - name: harborPassword
+      description: Password of haror
+  tasks:
+  - name: source-to-image
+    taskRef:
+      name: source-to-image
+    params:
+      - name: pathToContext
+        value: "${params.pathToContext}"
+      - name: pathToContext
+        value: "${params.pathToDockerFile}"
+      - name: imageUrl
+        value: "${params.imageUrl}"
+      - name: imageTag
+        value: "${params.imageTag}"
+    resources:
+      inputs:
+        - name: git-source
+          resource: git-source
+          
+  - name: chart-to-chartmuseum
+    taskRef:
+      name: chart-to-chartmuseum
+    params:
+      - name: pathToChart
+        value: "${params.pathToChart}"
+      - name: harborUrl
+        value: "${params.harborUrl}"
+      - name: harborProject
+        value: "${params.harborProject}"
+      - name: harborUsername
+        value: "${params.harborUsername}"
+      - name: harborPassword
+        value: "${params.harborPassword}"
+    resources:
+      inputs:
+        - name: git-source
+          resource: git-source
