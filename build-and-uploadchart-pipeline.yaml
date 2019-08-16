@@ -48,6 +48,8 @@ spec:
   - name: chart-to-chartmuseum
     taskRef:
       name: chart-to-chartmuseum
+    runAfter:
+      - source-to-image
     params:
       - name: pathToChart
         value: "${params.pathToChart}"
