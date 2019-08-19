@@ -1,2 +1,2 @@
 # tekton-test
-test prow
+test prow2 3
