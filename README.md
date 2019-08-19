@@ -1,2 +1,1 @@
 # tekton-test
-test prow
